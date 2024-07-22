@@ -1,0 +1,39 @@
+[versions]
+kotlin = "2.0.0"
+nexus-publish = "2.0.0"
+ktor = "3.0.0-beta-2"
+serialization = "1.7.1"
+coroutines = "1.7.1"
+napier = "2.7.1"
+shadow = "8.1.1"
+
+[libraries]
+kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
+nexus-publish = { module = "io.github.gradle-nexus.publish-plugin:io.github.gradle-nexus.publish-plugin.gradle.plugin", version.ref = "nexus-publish" }
+
+
+ktor-client = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
+ktor-engine-jvm = { module = "io.ktor:ktor-client-apache5", version.ref = "ktor" }
+ktor-engine-darwin = { module = "io.ktor:ktor-client-darwin", version.ref = "ktor" }
+ktor-engine-linux = { module = "io.ktor:ktor-client-cio", version.ref = "ktor" }
+ktor-engine-wasmJs = { module = "io.ktor:ktor-client-js", version.ref = "ktor" }
+
+ktor-logging = { module = "io.ktor:ktor-client-logging", version.ref = "ktor" }
+
+ktor-contentNegotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
+ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
+
+
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization" }
+
+
+kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }
+
+
+napier = { module = "io.github.aakira:napier", version.ref = "napier" }
+
+[plugins]
+kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+kotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+kotlinJvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+shadow = { id = "com.github.johnrengelman.shadow", version.ref = "shadow" }
