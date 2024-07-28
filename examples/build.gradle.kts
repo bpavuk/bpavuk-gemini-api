@@ -1,11 +1,13 @@
 plugins {
     application
     alias(libs.plugins.kotlinJvm)
+    alias(libs.plugins.kotlinSerialization)
     alias(libs.plugins.shadow)
 }
 
 dependencies {
     implementation(projects.main)
+    implementation(libs.kotlinx.serialization.json)
 }
 
 tasks.named<JavaExec>("run") {

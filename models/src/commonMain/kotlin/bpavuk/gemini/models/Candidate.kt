@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Candidate(
-    val content: Content,
+    val content: Content? = null,
     val finishReason: FinishReason,
     val safetyRatings: List<SafetyRating>,
 //    val citationMetadata: CitationMetadata,

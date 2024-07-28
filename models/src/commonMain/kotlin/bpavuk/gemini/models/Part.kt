@@ -1,99 +1,84 @@
 package bpavuk.gemini.models
 
+import bpavuk.gemini.models.codeExec.CodeExecutionResult
+import bpavuk.gemini.models.codeExec.ExecutableCode
+import bpavuk.gemini.models.tools.ExpectedFunctionResult
 import bpavuk.gemini.models.tools.FunctionCall
 import bpavuk.gemini.models.tools.FunctionResponse
-import kotlinx.serialization.Contextual
-import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.descriptors.SerialDescriptor
-import kotlinx.serialization.encoding.Decoder
-import kotlinx.serialization.encoding.Encoder
 
 
-@Serializable(Part.Serializer::class)
+@Suppress("FunctionName")
 sealed interface Part {
-    @Serializable
     data class Text(val text: String): Part
-
-    @Serializable
     data class BlobSurrogate(val inlineData: Blob): Part
-
-    @Serializable
-    data class FunctionCallSurrogate<T>(val functionCall: FunctionCall<T>): Part
-
-    @Serializable
-    data class FunctionResponseSurrogate<T>(val functionResponse: FunctionResponse<T>): Part
-
-    @Serializable
+    data class FunctionCallSurrogate<T : ExpectedFunctionResult>(val functionCall: FunctionCall<T>): Part
+    data class FunctionResponseSurrogate<T : ExpectedFunctionResult>(val functionResponse: FunctionResponse<T>): Part
     data class FileDataSurrogate(val fileData: FileData): Part
-
-    @Serializable
     data class ExecutableCodeSurrogate(val executableCode: ExecutableCode): Part
-
-    @Serializable
     data class CodeExecutionResultSurrogate(val codeExecutionResult: CodeExecutionResult): Part
-    
-    object Serializer : KSerializer<Part> {
-        @Serializable
-        private data class Surrogate(
-            val text: String? = null,
-            val inlineData: Blob? = null,
-            val functionCall: FunctionCall<@Contextual Any>? = null,
-            val functionResponse: FunctionResponse<@Contextual Any>? = null,
-            val fileData: FileData? = null,
-            val executableCode: ExecutableCode? = null,
-            val codeExecutionResult: CodeExecutionResult? = null
+
+    companion object {
+        fun Blob(mimeType: String, data: String) = BlobSurrogate(bpavuk.gemini.models.Blob(mimeType, data))
+
+        fun <T : ExpectedFunctionResult> FunctionCall(name: String, args: T) = FunctionCallSurrogate(
+            bpavuk.gemini.models.tools.FunctionCall(name, args)
         )
 
-        override val descriptor: SerialDescriptor = Surrogate.serializer().descriptor
+        fun <T : ExpectedFunctionResult> FunctionResponse(name: String, args: T) = FunctionResponseSurrogate(
+            bpavuk.gemini.models.tools.FunctionResponse(name, args)
+        )
 
-        override fun serialize(encoder: Encoder, value: Part) {
-            when (value) {
-                is Text -> {
-                    val surrogate = Surrogate(text = value.text)
-                    encoder.encodeSerializableValue(Surrogate.serializer(), surrogate)
-                }
-                is BlobSurrogate -> {
-                    val surrogate = Surrogate(inlineData = value.inlineData)
-                    encoder.encodeSerializableValue(Surrogate.serializer(), surrogate)
-                }
+        fun FileData(mimeType: String, fileUri: String) = FileDataSurrogate(
+            bpavuk.gemini.models.FileData(mimeType, fileUri)
+        )
 
-                is FunctionCallSurrogate<*> -> {
-                    val surrogate = Surrogate(functionCall = value.functionCall as FunctionCall<Any>)
-                    encoder.encodeSerializableValue(Surrogate.serializer(), surrogate)
-                }
-                is FunctionResponseSurrogate<*> -> {
-                    val surrogate = Surrogate(functionResponse = value.functionResponse as FunctionResponse<Any>)
-                    encoder.encodeSerializableValue(Surrogate.serializer(), surrogate)
-                }
+        fun ExecutableCode(language: Language, code: String) = ExecutableCodeSurrogate(
+            bpavuk.gemini.models.codeExec.ExecutableCode(language, code)
+        )
+        fun CodeExecutionResult(outcome: Outcome, result: String) = CodeExecutionResultSurrogate(
+            bpavuk.gemini.models.codeExec.CodeExecutionResult(outcome, result)
+        )
+    }
+}
 
-                is FileDataSurrogate -> {
-                    val surrogate = Surrogate(fileData = value.fileData)
-                    encoder.encodeSerializableValue(Surrogate.serializer(), surrogate)
-                }
-                is ExecutableCodeSurrogate -> {
-                    val surrogate = Surrogate(executableCode = value.executableCode)
-                    encoder.encodeSerializableValue(Surrogate.serializer(), surrogate)
-                }
-                is CodeExecutionResultSurrogate -> {
-                    val surrogate = Surrogate(codeExecutionResult = value.codeExecutionResult)
-                    encoder.encodeSerializableValue(Surrogate.serializer(), surrogate)
-                }
-            }
-        }
 
-        override fun deserialize(decoder: Decoder): Part {
-            val data = decoder.decodeSerializableValue(Surrogate.serializer())
-            return when {
-                data.text != null -> Text(data.text)
-                data.inlineData != null -> BlobSurrogate(data.inlineData)
-                data.functionCall != null -> FunctionCallSurrogate(data.functionCall)
-                data.functionResponse != null -> FunctionResponseSurrogate(data.functionResponse)
-                data.fileData != null -> FileDataSurrogate(data.fileData)
-                data.executableCode != null -> ExecutableCodeSurrogate(data.executableCode)
-                data.codeExecutionResult != null -> CodeExecutionResultSurrogate(data.codeExecutionResult)
-                else -> error("Unknown part data")
-            }
+
+@Suppress("UNCHECKED_CAST")
+fun <T : ExpectedFunctionResult> Part.toSurrogate(): PartSurrogate<T> {
+    return when (this) {
+        is Part.Text -> PartSurrogate(text = text)
+        is Part.BlobSurrogate -> PartSurrogate(inlineData = inlineData)
+        is Part.FunctionCallSurrogate<*> -> PartSurrogate(functionCall = functionCall)
+                as? PartSurrogate<T> ?: error("Function call type mismatches requested")
+        is Part.FunctionResponseSurrogate<*> -> PartSurrogate(functionResponse = functionResponse)
+                as? PartSurrogate<T> ?: error("Function response type mismatches requested")
+        is Part.FileDataSurrogate -> PartSurrogate(fileData = fileData)
+        is Part.ExecutableCodeSurrogate -> PartSurrogate(executableCode = executableCode)
+        is Part.CodeExecutionResultSurrogate -> PartSurrogate(codeExecutionResult = codeExecutionResult)
+    }
+}
+
+@Serializable
+data class PartSurrogate<T : ExpectedFunctionResult>(
+    val text: String? = null,
+    val inlineData: Blob? = null,
+    val functionCall: FunctionCall<T>? = null,
+    val functionResponse: FunctionResponse<T>? = null,
+    val fileData: FileData? = null,
+    val executableCode: ExecutableCode? = null,
+    val codeExecutionResult: CodeExecutionResult? = null
+) {
+    fun toPart(): Part {
+        return when {
+            text != null -> Part.Text(text)
+            inlineData != null -> Part.BlobSurrogate(inlineData)
+            functionCall != null -> Part.FunctionCallSurrogate(functionCall)
+            functionResponse != null -> Part.FunctionResponseSurrogate(functionResponse)
+            fileData != null -> Part.FileDataSurrogate(fileData)
+            executableCode != null -> Part.ExecutableCodeSurrogate(executableCode)
+            codeExecutionResult != null -> Part.CodeExecutionResultSurrogate(codeExecutionResult)
+            else -> error("Unknown part type")
         }
     }
 }

@@ -1,50 +1,12 @@
 import bpavuk.gemini.Gemini
 import bpavuk.gemini.models.Content
-import bpavuk.gemini.models.tools.FunctionCall
 import bpavuk.gemini.models.Part
+import bpavuk.gemini.models.toSurrogate
+import bpavuk.gemini.models.tools.*
 import kotlinx.coroutines.test.runTest
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 import kotlin.test.Test
 
 class Playground {
-    val json = Json { prettyPrint = true }
-
-    @Test
-    fun test() = runTest {
-        val part = Part.Text("fuckery")
-        println(part)
-        val jsonString = json.encodeToString(part)
-        println(jsonString)
-
-        val jsonString2 = """
-           {
-               "text": "fuckery"
-           } 
-        """.trimIndent()
-        val part2 = Json.decodeFromString<Part>(jsonString2)
-        println(part2)
-
-        // function calls
-        val fnCall = Part.FunctionCallSurrogate(FunctionCall("hello", listOf("world")))
-        println(fnCall)
-        val jsonString3 = json.encodeToString(fnCall)
-        println(jsonString3)
-
-        val fnCallString = """
-        {
-            "functionCall": {
-                "name": "hello",
-                "args": [
-                    "world"
-                ]
-            }
-        } 
-        """.trimIndent()
-
-        val fnCall2 = Json.decodeFromString<Part>(fnCallString)
-        println(fnCall2)
-    }
 
     @Test
     fun getModelsList() = runTest {
@@ -57,13 +19,31 @@ class Playground {
     fun generateContent() = runTest {
         val gemini = Gemini(apiKey = API_KEY)
         val model = gemini.getModels().first.first { it.name.contains("gemini-1.5-flash") }
-        val content = Content(parts = listOf(Part.Text("hello")), role = "user")
+        val content = Content(role = "user", partSurrogates = listOf(Part.Text("hello").toSurrogate()))
         val response = gemini.generateContent(model, listOf(content))
         println(response)
     }
 
     @Test
-    fun streamGenerateContent() = runTest {
+    fun tools() = runTest {
+        val smartHomeTool = Tool(
+            functionDeclarations = listOf(
+                FunctionDeclaration(
+                    name = "toggleLightbulb",
+                    parameters = Schema(type = Type.OBJECT, properties = mapOf("room" to Schema(type = Type.STRING))),
+                    description = "Toggle lightbulb in a specified room."
+                ),
+                FunctionDeclaration(
+                    name = "getRooms",
+                    description = "Returns a list of available rooms."
+                )
+            )
+        )
 
+        val gemini = Gemini(apiKey = API_KEY)
+        val model = gemini.getModels().first.first { it.name.contains("gemini-1.5-flash") }
+        val content = Content(role = "user", parts = listOf(Part.Text("Give me a list of available rooms to control")))
+        val response = gemini.generateContent(model, listOf(content), listOf(smartHomeTool))
+        println(response)
     }
 }

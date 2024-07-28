@@ -3,7 +3,7 @@ package bpavuk.gemini.models.safety
 import kotlinx.serialization.Serializable
 
 @Serializable
-class SafetyRating(
+data class SafetyRating(
     val category: HarmCategory,
     val probability: HarmProbability,
     val blocked: Boolean = false

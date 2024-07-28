@@ -1,5 +1,6 @@
-package bpavuk.gemini.models
+package bpavuk.gemini.models.codeExec
 
+import bpavuk.gemini.models.Language
 import kotlinx.serialization.Serializable
 
 @Serializable
