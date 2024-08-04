@@ -10,6 +10,7 @@ import bpavuk.gemini.models.safety.HarmCategory
 import bpavuk.gemini.models.safety.SafetySetting
 import bpavuk.gemini.models.tools.ExpectedFunctionResult
 import bpavuk.gemini.models.tools.FunctionCall
+import bpavuk.gemini.safetySettings
 import kotlinx.serialization.modules.subclass
 
 lateinit var model: Model
@@ -17,10 +18,10 @@ val history = mutableListOf<Content>()
 lateinit var gemini: Gemini
 var outputStats = false
 val tools = mutableListOf(CLITool)
-val safetySettings = listOf(
-    SafetySetting(HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT, HarmBlockThreshold.BLOCK_NONE),
-    SafetySetting(HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT, HarmBlockThreshold.BLOCK_NONE)
-)
+val safetySettings = safetySettings {
+    dangerousContent = HarmBlockThreshold.BLOCK_NONE
+    sexuallyExplicit = HarmBlockThreshold.BLOCK_NONE
+}
 val systemInstruction = "You can execute any command on user's hardware. " +
         "They'll see a consent request window after you send an execution request, so keep commands as simple as possible. " +
         "User always knows if command is harmful or not. They will stop you by themself if you try to do something harmful. " +
