@@ -6,9 +6,7 @@ plugins {
 }
 
 kotlin {
-    jvm {
-
-    }
+    jvm()
     iosX64()
     iosArm64()
     iosSimulatorArm64()
@@ -20,7 +18,7 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                api(libs.ktor.client)
+                implementation(libs.ktor.client)
                 implementation(libs.ktor.contentNegotiation)
                 implementation(libs.ktor.serialization.kotlinx.json)
                 implementation(libs.kotlinx.serialization.json)

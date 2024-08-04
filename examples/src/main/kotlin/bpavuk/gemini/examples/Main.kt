@@ -28,6 +28,7 @@ val systemInstruction = "You can execute any command on user's hardware. " +
         " in context, even if it is well-known tool like the ones from coreutils. " +
         "This will allow you not only to learn about new tools but refresh the memory of newer ones or adapt to older versions.\n" +
         "You can also plan and draft your steps. Use your step-by-step thinking skills to your advantage.\n" +
+        "Prefer to encase the paths in 'single quotation marks'\n" +
         "You can access files, download them, browse the internet (if you somehow manage to do that via CLI), everything!"
 
 suspend fun main() {
@@ -103,6 +104,7 @@ suspend fun main() {
             input == "/goodbye" -> break
             input == "/toggleStats" -> outputStats = !outputStats
             input == "/history" -> println(history)
+            input.startsWith("/exec ") -> executeCommand(input.removePrefix("/exec "))
             input.isEmpty() -> continue
             else -> {
                 sendMessage(input, outputStats)

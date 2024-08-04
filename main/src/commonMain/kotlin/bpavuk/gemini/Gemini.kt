@@ -78,15 +78,15 @@ public class Gemini(
             throw result.body<GeminiRequestErrorSurrogate>().error
         }
     }
-
+    
     public suspend fun generateContent(
-        model: Model,
+        model: String,
         contents: List<Content>,
         tools: List<Tool>? = null,
         safetySettings: List<SafetySetting>? = null,
         systemInstructions: String? = null
     ): GenerateContentResponse {
-        val result = client.post("${model.name}:generateContent") {
+        val result = client.post("${model}:generateContent") {
             val systemInstructionContent = systemInstructions?.let {
                 content(role = "system") {
                     text(it)
@@ -101,4 +101,18 @@ public class Gemini(
         }
         return result.body()
     }
+
+    public suspend fun generateContent(
+        model: Model,
+        contents: List<Content>,
+        tools: List<Tool>? = null,
+        safetySettings: List<SafetySetting>? = null,
+        systemInstructions: String? = null
+    ): GenerateContentResponse = generateContent(
+        model.name,
+        contents,
+        tools,
+        safetySettings,
+        systemInstructions
+    )
 }
