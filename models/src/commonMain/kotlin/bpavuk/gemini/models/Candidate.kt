@@ -4,7 +4,7 @@ import bpavuk.gemini.models.safety.SafetyRating
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Candidate(
+public data class Candidate(
     val content: Content? = null,
     val finishReason: FinishReason,
     val safetyRatings: List<SafetyRating>,

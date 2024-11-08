@@ -3,7 +3,7 @@ package bpavuk.gemini.models
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Model(
+public data class Model(
     val name: String,
     val baseModelId: String? = null,
     val version: String,

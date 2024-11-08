@@ -3,7 +3,7 @@ package bpavuk.gemini.models.safety
 import kotlinx.serialization.Serializable
 
 @Serializable
-enum class HarmCategory {
+public enum class HarmCategory {
     HARM_CATEGORY_UNSPECIFIED,
     HARM_CATEGORY_DEROGATORY,
     HARM_CATEGORY_TOXICITY,

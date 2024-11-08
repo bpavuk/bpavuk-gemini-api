@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalWasmDsl
-
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     id("module.publication")
@@ -12,17 +10,19 @@ kotlin {
     iosSimulatorArm64()
     linuxX64()
     linuxArm64()
-    @OptIn(ExperimentalWasmDsl::class)
+    @OptIn(org.jetbrains.kotlin.gradle.ExperimentalWasmDsl::class)
     wasmJs()
 
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation(libs.ktor.client)
+                api(libs.ktor.client)
                 implementation(libs.ktor.contentNegotiation)
                 implementation(libs.ktor.serialization.kotlinx.json)
-                implementation(libs.kotlinx.serialization.json)
                 implementation(libs.ktor.logging)
+
+                implementation(libs.kotlinx.serialization.json)
+                implementation(libs.kotlinx.io)
                 api(project(":models"))
             }
         }

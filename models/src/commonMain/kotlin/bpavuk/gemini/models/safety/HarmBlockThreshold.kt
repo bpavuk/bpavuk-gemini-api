@@ -1,6 +1,6 @@
 package bpavuk.gemini.models.safety
 
-enum class HarmBlockThreshold {
+public enum class HarmBlockThreshold {
     HARM_BLOCK_THRESHOLD_UNSPECIFIED,
     BLOCK_LOW_AND_ABOVE,
     BLOCK_MEDIUM_AND_ABOVE,

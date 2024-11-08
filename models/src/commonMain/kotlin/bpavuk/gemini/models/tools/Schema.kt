@@ -3,7 +3,7 @@ package bpavuk.gemini.models.tools
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Schema(
+public data class Schema(
     val type: Type,
     val description: String? = null,
     val nullable: Boolean = true,

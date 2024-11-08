@@ -6,10 +6,10 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Content(
+public data class Content(
     val role: String,
     @SerialName("parts")
     val partSurrogates: List<PartSurrogate<@Polymorphic ExpectedFunctionResult>>
 ) {
-    constructor(parts: List<Part>, role: String) : this(role, parts.map { it.toSurrogate() })
+    public constructor(parts: List<Part>, role: String) : this(role, parts.map { it.toSurrogate() })
 }

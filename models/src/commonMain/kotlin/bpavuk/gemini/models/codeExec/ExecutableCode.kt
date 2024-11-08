@@ -4,7 +4,7 @@ import bpavuk.gemini.models.Language
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ExecutableCode(
+public data class ExecutableCode(
     val language: Language,
     val code: String
 )

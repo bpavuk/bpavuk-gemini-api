@@ -1,11 +1,12 @@
 [versions]
-kotlin = "2.0.20-RC"
+kotlin = "2.0.20"
 nexus-publish = "2.0.0"
 ktor = "3.0.0-beta-2"
-serialization = "1.7.1"
-coroutines = "1.7.1"
+serialization = "1.7.3"
+coroutines = "1.9.0"
 napier = "2.7.1"
 shadow = "8.1.1"
+kotlinx-io = "0.5.4"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -28,6 +29,9 @@ kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serializa
 
 
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }
+
+
+kotlinx-io = { module = "org.jetbrains.kotlinx:kotlinx-io-core", version.ref = "kotlinx-io" }
 
 
 napier = { module = "io.github.aakira:napier", version.ref = "napier" }

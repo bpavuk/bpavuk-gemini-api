@@ -3,7 +3,7 @@ package bpavuk.gemini.models.tools
 import kotlinx.serialization.Serializable
 
 @Serializable
-enum class Type {
+public enum class Type {
     TYPE_UNSPECIFIED,
     STRING,
     NUMBER,

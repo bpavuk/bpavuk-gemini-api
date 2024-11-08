@@ -5,4 +5,4 @@ import kotlin.jvm.JvmInline
 
 @JvmInline
 @Serializable
-value class NextPageToken(val token: String)
+public value class NextPageToken(public val token: String)

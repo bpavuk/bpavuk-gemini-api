@@ -1,6 +1,6 @@
 package bpavuk.gemini.models.tools
 
-enum class Mode {
+public enum class Mode {
     MODE_UNSPECIFIED,
     AUTO,
     ANY,

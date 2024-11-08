@@ -7,7 +7,7 @@ import bpavuk.gemini.models.tools.ToolConfig
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class GenerateContentSurrogate(
+public data class GenerateContentSurrogate(
     val contents: List<Content>,
     val tools: List<Tool>? = null,
     val toolConfig: ToolConfig? = null,

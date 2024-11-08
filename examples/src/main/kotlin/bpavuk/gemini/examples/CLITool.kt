@@ -4,8 +4,8 @@ import bpavuk.gemini.models.tools.ExpectedFunctionResult
 import bpavuk.gemini.models.tools.Schema
 import bpavuk.gemini.models.tools.Type
 import bpavuk.gemini.tools.tool
-import kotlinx.io.IOException
 import kotlinx.serialization.Serializable
+import java.io.IOException
 
 val CLITool = tool {
     function(

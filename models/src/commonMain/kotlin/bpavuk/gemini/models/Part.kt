@@ -9,34 +9,34 @@ import kotlinx.serialization.Serializable
 
 
 @Suppress("FunctionName")
-sealed interface Part {
-    data class Text(val text: String): Part
-    data class BlobSurrogate(val inlineData: Blob): Part
-    data class FunctionCallSurrogate<T : ExpectedFunctionResult>(val functionCall: FunctionCall<T>): Part
-    data class FunctionResponseSurrogate<T : ExpectedFunctionResult>(val functionResponse: FunctionResponse<T>): Part
-    data class FileDataSurrogate(val fileData: FileData): Part
-    data class ExecutableCodeSurrogate(val executableCode: ExecutableCode): Part
-    data class CodeExecutionResultSurrogate(val codeExecutionResult: CodeExecutionResult): Part
+public sealed interface Part {
+    public data class Text(val text: String): Part
+    public data class BlobSurrogate(val inlineData: Blob): Part
+    public data class FunctionCallSurrogate<T : ExpectedFunctionResult>(val functionCall: FunctionCall<T>): Part
+    public data class FunctionResponseSurrogate<T : ExpectedFunctionResult>(val functionResponse: FunctionResponse<T>): Part
+    public data class FileDataSurrogate(val fileData: FileData): Part
+    public data class ExecutableCodeSurrogate(val executableCode: ExecutableCode): Part
+    public data class CodeExecutionResultSurrogate(val codeExecutionResult: CodeExecutionResult): Part
 
-    companion object {
-        fun Blob(mimeType: String, data: String) = BlobSurrogate(bpavuk.gemini.models.Blob(mimeType, data))
+    public companion object {
+        public fun Blob(mimeType: String, data: String): BlobSurrogate = BlobSurrogate(bpavuk.gemini.models.Blob(mimeType, data))
 
-        fun <T : ExpectedFunctionResult> FunctionCall(name: String, args: T) = FunctionCallSurrogate(
+        public fun <T : ExpectedFunctionResult> FunctionCall(name: String, args: T): FunctionCallSurrogate<T> = FunctionCallSurrogate(
             bpavuk.gemini.models.tools.FunctionCall(name, args)
         )
 
-        fun <T : ExpectedFunctionResult> FunctionResponse(name: String, args: T) = FunctionResponseSurrogate(
+        public fun <T : ExpectedFunctionResult> FunctionResponse(name: String, args: T): FunctionResponseSurrogate<T> = FunctionResponseSurrogate(
             bpavuk.gemini.models.tools.FunctionResponse(name, args)
         )
 
-        fun FileData(mimeType: String, fileUri: String) = FileDataSurrogate(
+        public fun FileData(mimeType: String, fileUri: String): FileDataSurrogate = FileDataSurrogate(
             bpavuk.gemini.models.FileData(mimeType, fileUri)
         )
 
-        fun ExecutableCode(language: Language, code: String) = ExecutableCodeSurrogate(
+        public fun ExecutableCode(language: Language, code: String): ExecutableCodeSurrogate = ExecutableCodeSurrogate(
             bpavuk.gemini.models.codeExec.ExecutableCode(language, code)
         )
-        fun CodeExecutionResult(outcome: Outcome, result: String) = CodeExecutionResultSurrogate(
+        public fun CodeExecutionResult(outcome: Outcome, result: String): CodeExecutionResultSurrogate = CodeExecutionResultSurrogate(
             bpavuk.gemini.models.codeExec.CodeExecutionResult(outcome, result)
         )
     }
@@ -45,7 +45,7 @@ sealed interface Part {
 
 
 @Suppress("UNCHECKED_CAST")
-fun <T : ExpectedFunctionResult> Part.toSurrogate(): PartSurrogate<T> {
+public fun <T : ExpectedFunctionResult> Part.toSurrogate(): PartSurrogate<T> {
     return when (this) {
         is Part.Text -> PartSurrogate(text = text)
         is Part.BlobSurrogate -> PartSurrogate(inlineData = inlineData)
@@ -60,7 +60,7 @@ fun <T : ExpectedFunctionResult> Part.toSurrogate(): PartSurrogate<T> {
 }
 
 @Serializable
-data class PartSurrogate<T : ExpectedFunctionResult>(
+public data class PartSurrogate<T : ExpectedFunctionResult>(
     val text: String? = null,
     val inlineData: Blob? = null,
     val functionCall: FunctionCall<T>? = null,
@@ -69,7 +69,7 @@ data class PartSurrogate<T : ExpectedFunctionResult>(
     val executableCode: ExecutableCode? = null,
     val codeExecutionResult: CodeExecutionResult? = null
 ) {
-    fun toPart(): Part {
+    public fun toPart(): Part {
         return when {
             text != null -> Part.Text(text)
             inlineData != null -> Part.BlobSurrogate(inlineData)

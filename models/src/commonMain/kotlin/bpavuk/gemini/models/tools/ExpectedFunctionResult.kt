@@ -2,7 +2,7 @@ package bpavuk.gemini.models.tools
 
 import kotlinx.serialization.Serializable
 
-interface ExpectedFunctionResult
+public interface ExpectedFunctionResult
 
 @Serializable
-class EmptyResult : ExpectedFunctionResult
+public class EmptyResult : ExpectedFunctionResult

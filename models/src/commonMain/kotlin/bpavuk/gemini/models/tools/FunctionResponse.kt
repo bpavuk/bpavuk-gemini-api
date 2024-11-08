@@ -3,7 +3,7 @@ package bpavuk.gemini.models.tools
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class FunctionResponse<T : ExpectedFunctionResult>(
+public data class FunctionResponse<T : ExpectedFunctionResult>(
     val name: String,
     val response: T
 )
