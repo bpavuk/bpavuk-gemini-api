@@ -1,8 +1,11 @@
-import bpavuk.gemini.Gemini
-import bpavuk.gemini.models.Content
-import bpavuk.gemini.models.Part
-import bpavuk.gemini.models.toSurrogate
-import bpavuk.gemini.models.tools.*
+import dev.bpavuk.gemini.Gemini
+import dev.bpavuk.gemini.models.Content
+import dev.bpavuk.gemini.models.Part
+import dev.bpavuk.gemini.models.toSurrogate
+import dev.bpavuk.gemini.models.tools.FunctionDeclaration
+import dev.bpavuk.gemini.models.tools.Schema
+import dev.bpavuk.gemini.models.tools.Tool
+import dev.bpavuk.gemini.models.tools.Type
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 
@@ -30,7 +33,10 @@ class Playground {
             functionDeclarations = listOf(
                 FunctionDeclaration(
                     name = "toggleLightbulb",
-                    parameters = Schema(type = Type.OBJECT, properties = mapOf("room" to Schema(type = Type.STRING))),
+                    parameters = Schema(
+                        type = Type.OBJECT,
+                        properties = mapOf("room" to Schema(type = Type.STRING))
+                    ),
                     description = "Toggle lightbulb in a specified room."
                 ),
                 FunctionDeclaration(
